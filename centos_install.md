@@ -1,7 +1,7 @@
 # init centos for web and prxoy
 
 `yum -y install vim`
-
+`systemctl stop firewalld.service`
 `systemctl disable firewalld.service`
 
 ## none password login
