@@ -2,7 +2,7 @@
 
 `yum -y install vim`
 
-`systemctl stop firewalld.service`
+`systemctl disable firewalld.service`
 
 ## none password login
 
@@ -14,8 +14,13 @@
 - `cd nginx-1.9.12`
 - `yum -y install gcc-c++ zlib zlib-devel pcre-devel pcre openssl openssl--devel`
 - `./configure`
--  `make`
--  `make install`
+- `make`
+- `make install`
+- `chmod +x /etc/rc.d/rc.local`
+- `vi /etc/rc.d/rc.local`
+```
+/usr/local/nginx/sbin/nginx
+```
 
 ### test download speed
 
@@ -28,6 +33,37 @@ use epoll;
 - `echo 'test for web site' >> index.html`
 - `dd if=/dev/zero of=500m.tmp bs=1M count=500`
 - `/usr/local/nginx/sbin/nginx`
+
+## install pptpd
+
+- `yum -y install ppp pptpd`
+- `vi /etc/pptpd.conf`
+```
+localip 192.168.0.1
+remoteip 192.168.0.234-238,192.168.0.245
+```
+- `vi /etc/ppp/options.pptpd`
+```
+ms-dns 8.8.8.8
+ms-dns 8.8.4.4
+```
+- `vi /etc/ppp/chap-secrets`
+```
+用户名 pptpd 密码 *
+```
+- `vi /etc/sysctl.conf`
+```
+net.ipv4.ip_forward=1
+```
+- `sysctl -p`
+- `iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE`
+- `chmod +x /etc/rc.d/rc.local`
+- `vi /etc/rc.d/rc.local`
+```
+iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE
+```
+- `pptpd start`
+- `chkconfig pptpd on`
 
 ## install shadowsocks
 
@@ -46,7 +82,14 @@ aes-256-cfb
 
 ## after reboot
 
-- `systemctl stop firewalld.service`
-- `/usr/local/nginx/sbin/nginx`
+### nginx
+
+nothing need trun
+
+### shadowsocks
+
 - `ss-server`
 
+### pptpd
+
+nothing need trun
