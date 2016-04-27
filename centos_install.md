@@ -84,7 +84,7 @@ aes-256-cfb
 
 ### nginx
 
-nothing need trun
+nothing need run
 
 ### shadowsocks
 
@@ -92,4 +92,4 @@ nothing need trun
 
 ### pptpd
 
-nothing need trun
+nothing need run
